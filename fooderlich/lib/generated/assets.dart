@@ -18,6 +18,7 @@ class Assets {
   static const String foodPicsFoodSalmon = 'assets/food_pics/food_salmon.jpg';
   static const String foodPicsFoodSoymilk = 'assets/food_pics/food_soymilk.png';
   static const String foodPicsFoodSpaghetti = 'assets/food_pics/food_spaghetti.jpg';
+  static const String fooderlichAssetsEmptyList = 'assets/fooderlich_assets/empty_list.png';
   static const String magazinePicsCardBread = 'assets/magazine_pics/card_bread.jpg';
   static const String magazinePicsCardCarrot = 'assets/magazine_pics/card_carrot.png';
   static const String magazinePicsCardSalad = 'assets/magazine_pics/card_salad.png';
