@@ -27,13 +27,13 @@ class ExploreRecipe {
   List<Instruction>? instructions;
 
   ExploreRecipe(
-      { this.cardType,
+      {this.cardType,
        this.title,
        this.subtitle,
        this.backgroundImage,
        this.backgroundImageSource,
        this.message,
-        this.authorName,
+       this.authorName,
        this.role,
        this.profileImage,
        this.durationInMinutes,

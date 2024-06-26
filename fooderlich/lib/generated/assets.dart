@@ -2,12 +2,6 @@
 class Assets {
   Assets._();
 
-  static const String assetsAuthorKatz = 'assets/author_katz.jpeg';
-  static const String assetsMag1 = 'assets/mag1.png';
-  static const String assetsMag2 = 'assets/mag2.png';
-  static const String assetsMag3 = 'assets/mag3.png';
-  static const String assetsMag4 = 'assets/mag4.png';
-  static const String assetsMag5 = 'assets/mag5.png';
   static const String foodPicsFoodBanana = 'assets/food_pics/food_banana.jpg';
   static const String foodPicsFoodBrusselsSprouts = 'assets/food_pics/food_brussels_sprouts.jpg';
   static const String foodPicsFoodBurger = 'assets/food_pics/food_burger.jpg';
