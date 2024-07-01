@@ -82,10 +82,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_colorpicker
-      sha256: e69dc0ccf69d394e5c207d050bafa2ce1eb9b6bb6729f2b9f5833000709710b9
+      sha256: "969de5f6f9e2a570ac660fb7b501551451ea2a1ab9e2097e89475f60e07816ea"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "1.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:

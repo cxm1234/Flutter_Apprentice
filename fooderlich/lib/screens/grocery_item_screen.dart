@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:fooderlich/models/grocery_item.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -73,7 +74,11 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
             buildNameField(),
             buildImportanceField(),
             buildDateField(context),
-            buildTimeField(context)
+            buildTimeField(context),
+            const SizedBox(height: 10.0,),
+            buildColorPicker(context),
+            const SizedBox(height: 10.0,),
+            buildQuantityField()
           ],
         ),
       ),
@@ -108,23 +113,32 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Importance', style: GoogleFonts.lato(fontSize: 28.0),),
+        Text(
+          'Importance',
+          style: GoogleFonts.lato(fontSize: 28.0),
+        ),
         Wrap(
           spacing: 10.0,
           children: [
             ChoiceChip(
               selectedColor: Colors.black,
-                label: const Text('low', style: TextStyle(color: Colors.white),),
-                selected: _importance == Importance.low,
+              label: const Text(
+                'low',
+                style: TextStyle(color: Colors.white),
+              ),
+              selected: _importance == Importance.low,
               onSelected: (selected) {
-                  setState(() {
-                    _importance = Importance.low;
-                  });
+                setState(() {
+                  _importance = Importance.low;
+                });
               },
             ),
             ChoiceChip(
               selectedColor: Colors.black,
-              label: const Text('medium', style: TextStyle(color: Colors.white),),
+              label: const Text(
+                'medium',
+                style: TextStyle(color: Colors.white),
+              ),
               selected: _importance == Importance.medium,
               onSelected: (selected) {
                 setState(() {
@@ -134,7 +148,10 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
             ),
             ChoiceChip(
               selectedColor: Colors.black,
-              label: const Text('high', style: TextStyle(color: Colors.white),),
+              label: const Text(
+                'high',
+                style: TextStyle(color: Colors.white),
+              ),
               selected: _importance == Importance.high,
               onSelected: (selected) {
                 setState(() {
@@ -155,7 +172,10 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Date', style: GoogleFonts.lato(fontSize: 28.0),),
+            Text(
+              'Date',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
             TextButton(
               child: const Text('Select'),
               onPressed: () async {
@@ -163,8 +183,8 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
                 final selectedDate = await showDatePicker(
                     context: context,
                     initialDate: currentDate,
-                    firstDate: currentDate, lastDate: DateTime(currentDate.year + 5)
-                );
+                    firstDate: currentDate,
+                    lastDate: DateTime(currentDate.year + 5));
                 setState(() {
                   if (selectedDate != null) {
                     _dueDate = selectedDate;
@@ -174,8 +194,7 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
             )
           ],
         ),
-        if (_dueDate != null)
-          Text(DateFormat('yyyy-MM-dd').format(_dueDate))
+        if (_dueDate != null) Text(DateFormat('yyyy-MM-dd').format(_dueDate))
       ],
     );
   }
@@ -187,11 +206,15 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Time of Day', style: GoogleFonts.lato(fontSize: 28.0),),
+            Text(
+              'Time of Day',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
             TextButton(
               child: const Text('Select'),
               onPressed: () async {
-                final timeOfDay = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                final timeOfDay = await showTimePicker(
+                    context: context, initialTime: TimeOfDay.now());
                 setState(() {
                   if (timeOfDay != null) {
                     _timeOfDay = timeOfDay;
@@ -201,8 +224,95 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
             )
           ],
         ),
-        if (_timeOfDay != null)
-          Text(_timeOfDay.format(context))
+        if (_timeOfDay != null) Text(_timeOfDay.format(context))
+      ],
+    );
+  }
+
+  Widget buildColorPicker(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              height: 50.0,
+              width: 10.0,
+              color: _currentColor,
+            ),
+            const SizedBox(
+              width: 8.0,
+            ),
+            Text(
+              'Color',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            )
+          ],
+        ),
+        TextButton(
+            child: const Text('Select'),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: BlockPicker(
+                        pickerColor: Colors.white,
+                        onColorChanged: (color) {
+                          setState(
+                            () {
+                              _currentColor = color;
+                            },
+                          );
+                        },
+                      ),
+                      actions: [
+                        TextButton(
+                            child: const Text('Save'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }),
+                      ],
+                    );
+                  });
+            })
+      ],
+    );
+  }
+
+  Widget buildQuantityField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(
+              'Quantity',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
+            const SizedBox(width: 16.0,),
+            Text(
+              _currentSliderValue.toInt().toString(),
+              style: GoogleFonts.lato(fontSize: 18.0),
+            )
+          ],
+        ),
+        Slider(
+          inactiveColor: _currentColor.withOpacity(0.5),
+          activeColor: _currentColor,
+          value: _currentSliderValue.toDouble(),
+          min: 0.0,
+          max: 100.0,
+          divisions: 100,
+          label: _currentSliderValue.toInt().toString(),
+          onChanged: (double value) {
+            setState(() {
+              _currentSliderValue = value.toInt();
+            });
+          },
+        )
       ],
     );
   }
