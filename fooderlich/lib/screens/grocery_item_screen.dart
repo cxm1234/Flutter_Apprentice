@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:fooderlich/components/grocery_tile.dart';
 import 'package:fooderlich/models/grocery_item.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class GroceryItemScreen extends StatefulWidget {
   final Function(GroceryItem) onCreate;
-  Function(GroceryItem)? onUpdate;
+  Function(GroceryItem) onUpdate;
   GroceryItem? originalItem;
-  bool? isUpdating;
+  bool isUpdating;
 
   GroceryItemScreen(
-      {super.key, required this.onCreate, this.onUpdate, this.originalItem})
+      {super.key, required this.onCreate, required this.onUpdate, this.originalItem})
       : isUpdating = (originalItem != null);
 
   @override
@@ -60,7 +62,29 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
     return Scaffold(
       appBar: AppBar(
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.check))
+            IconButton(onPressed: () {
+              final groceryItem = GroceryItem(
+                id: widget.originalItem?.id ?? const Uuid().v1(),
+                  name: _nameController.text,
+                  importance: _importance,
+                  color: _currentColor,
+                  quantity: _currentSliderValue,
+                  date: DateTime(
+                    _dueDate.year,
+                    _dueDate.month,
+                    _dueDate.day,
+                    _timeOfDay.hour,
+                    _timeOfDay.minute
+                  )
+              );
+
+              if (widget.isUpdating) {
+                widget.onUpdate(groceryItem);
+              } else {
+                widget.onCreate(groceryItem);
+              }
+
+            }, icon: const Icon(Icons.check))
           ],
           elevation: 0.0,
           title: Text(
@@ -78,7 +102,18 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
             const SizedBox(height: 10.0,),
             buildColorPicker(context),
             const SizedBox(height: 10.0,),
-            buildQuantityField()
+            buildQuantityField(),
+            const SizedBox(height: 16.0,),
+            GroceryTile(item: GroceryItem(
+              name: _name,
+              importance: _importance,
+              color: _currentColor,
+              quantity: _currentSliderValue,
+              date: DateTime(_dueDate.year, _dueDate.month, _dueDate.day, _timeOfDay.hour, _timeOfDay.minute),
+            ),
+            onComplete: (complete) {
+
+            },)
           ],
         ),
       ),
