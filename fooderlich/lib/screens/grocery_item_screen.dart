@@ -105,6 +105,7 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
             buildQuantityField(),
             const SizedBox(height: 16.0,),
             GroceryTile(item: GroceryItem(
+              id: const Uuid().v1(),
               name: _name,
               importance: _importance,
               color: _currentColor,

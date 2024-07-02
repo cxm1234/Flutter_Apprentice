@@ -3,7 +3,7 @@ import 'dart:ui';
 enum Importance { low, medium, high }
 
 class GroceryItem {
-  String? id;
+  String id;
   final String name;
   final Importance importance;
   final Color color;
@@ -12,7 +12,7 @@ class GroceryItem {
   bool isComplete;
 
   GroceryItem(
-      {this.id,
+      {required this.id,
       required this.name,
       required this.importance,
       required this.color,
