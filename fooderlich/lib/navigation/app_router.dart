@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fooderlich/models/app_state_manager.dart';
 import 'package:fooderlich/models/grocery_manager.dart';
 import 'package:fooderlich/models/profile_manager.dart';
+import 'package:fooderlich/screens/splash_screen.dart';
 
 class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDelegateMixin {
 
@@ -22,15 +23,20 @@ class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDe
     profileManager.addListener(notifyListeners);
   }
 
-  // TODO: Dispose Listeners
-
+  @override
+  void dispose() {
+    appStateManager.removeListener(notifyListeners);
+    groceryManager.removeListener(notifyListeners);
+    profileManager.removeListener(notifyListeners);
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
       onPopPage: _handlePopPage,
       pages: [
-        // TODO: Add SplashScreen
+        if (!appStateManager.isInitialized) SplashScreen.page(),
         // TODO: Add LoginScreen
         // TODO: Add OnboardingScreen
         // TODO: Add Home
