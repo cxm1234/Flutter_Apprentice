@@ -19,6 +19,10 @@ class Assets {
   static const String foodPicsFoodSoymilk = 'assets/food_pics/food_soymilk.png';
   static const String foodPicsFoodSpaghetti = 'assets/food_pics/food_spaghetti.jpg';
   static const String fooderlichAssetsEmptyList = 'assets/fooderlich_assets/empty_list.png';
+  static const String fooderlichAssetsList = 'assets/fooderlich_assets/list.png';
+  static const String fooderlichAssetsRecommend = 'assets/fooderlich_assets/recommend.png';
+  static const String fooderlichAssetsRwLogo = 'assets/fooderlich_assets/rw_logo.png';
+  static const String fooderlichAssetsSheet = 'assets/fooderlich_assets/sheet.png';
   static const String magazinePicsCardBread = 'assets/magazine_pics/card_bread.jpg';
   static const String magazinePicsCardCarrot = 'assets/magazine_pics/card_carrot.png';
   static const String magazinePicsCardSalad = 'assets/magazine_pics/card_salad.png';
