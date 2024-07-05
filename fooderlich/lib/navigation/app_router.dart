@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fooderlich/models/app_state_manager.dart';
 import 'package:fooderlich/models/grocery_manager.dart';
 import 'package:fooderlich/models/profile_manager.dart';
+import 'package:fooderlich/screens/login_screen.dart';
 import 'package:fooderlich/screens/splash_screen.dart';
 
 class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -37,7 +38,7 @@ class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDe
       onPopPage: _handlePopPage,
       pages: [
         if (!appStateManager.isInitialized) SplashScreen.page(),
-        // TODO: Add LoginScreen
+        if (appStateManager.isInitialized && !appStateManager.isLoggedIn) LoginScreen.page(),
         // TODO: Add OnboardingScreen
         // TODO: Add Home
         // TODO: Create new item
