@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fooderlich/models/app_state_manager.dart';
 import 'package:fooderlich/models/fooderlich_pages.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
 
@@ -61,7 +63,7 @@ class LoginScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         onPressed: () async {
-          
+          Provider.of<AppStateManager>(context, listen: false).login('mockUsername', 'mockPassword');
         },
       ),
     );
