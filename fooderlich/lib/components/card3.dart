@@ -11,7 +11,7 @@ class Card3 extends StatelessWidget {
     final chips = <Widget>[];
     recipe.tags?.take(6).forEach((element) {
       final chip = Chip(
-          label: Text(element, style: FooderlichTheme.darkTextTheme.bodyText1),
+          label: Text(element, style: FooderlichTheme.darkTextTheme.bodyLarge),
           backgroundColor: Colors.black.withOpacity(0.7));
       chips.add(chip);
     });
@@ -45,7 +45,7 @@ class Card3 extends StatelessWidget {
                   const Icon(Icons.book, color: Colors.white, size: 40),
                   const SizedBox(height: 8),
                   Text(recipe.title ?? "",
-                      style: FooderlichTheme.darkTextTheme.headline2),
+                      style: FooderlichTheme.darkTextTheme.displayMedium),
                   const SizedBox(height: 30),
                 ],
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:fooderlich/components/grocery_tile.dart';
+import 'package:fooderlich/models/fooderlich_pages.dart';
 import 'package:fooderlich/models/grocery_item.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -9,12 +10,25 @@ import 'package:uuid/uuid.dart';
 
 class GroceryItemScreen extends StatefulWidget {
   final Function(GroceryItem) onCreate;
-  Function(GroceryItem) onUpdate;
+  Function(GroceryItem, int) onUpdate;
   GroceryItem? originalItem;
+  int? index;
   bool isUpdating;
 
+  static MaterialPage page({GroceryItem? item, int? index, required Function(GroceryItem) onCreate, required Function(GroceryItem, int) onUpdate}) {
+    return MaterialPage(
+        name: FooderlichPages.groceryItemDetails,
+        child: GroceryItemScreen(
+          originalItem: item,
+          index: index,
+          onCreate: onCreate,
+          onUpdate: onUpdate,
+        )
+    );
+  }
+
   GroceryItemScreen(
-      {super.key, required this.onCreate, required this.onUpdate, this.originalItem})
+      {super.key, required this.onCreate, required this.onUpdate, this.originalItem, required this.index})
       : isUpdating = (originalItem != null);
 
   @override
@@ -79,7 +93,7 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
               );
 
               if (widget.isUpdating) {
-                widget.onUpdate(groceryItem);
+                widget.onUpdate(groceryItem, widget.index ?? 0);
               } else {
                 widget.onCreate(groceryItem);
               }

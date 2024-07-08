@@ -1,7 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fooderlich/models/app_state_manager.dart';
+import 'package:fooderlich/models/fooderlich_pages.dart';
+import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
+
+  static MaterialPage page() {
+    return MaterialPage(
+      name: FooderlichPages.onboardingPath,
+      key: ValueKey(FooderlichPages.onboardingPath),
+      child: const OnboardingScreen()
+    );
+  }
 
   const OnboardingScreen({super.key});
 
@@ -34,10 +47,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-
+            Expanded(child: buildPages()),
+            buildIndicator(),
+            buildActionButtons()
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildActionButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        MaterialButton(
+            child: const Text('Skip'),
+            onPressed: () {
+              Provider.of<AppStateManager>(context, listen: false).completeOnboarding();
+            })
+      ],
     );
   }
 
@@ -78,6 +106,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 16,)
         ],
       ),
+    );
+  }
+
+  Widget buildIndicator() {
+    return SmoothPageIndicator(
+      controller: controller,
+      count: 3,
+      effect: WormEffect(activeDotColor: rwColor),
     );
   }
 
