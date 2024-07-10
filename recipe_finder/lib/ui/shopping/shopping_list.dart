@@ -1,13 +1,26 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ShoppingList extends StatelessWidget {
-  const ShoppingList({super.key});
 
+  ShoppingList({super.key});
+  // TODO 1
   final ingredients = <String>[];
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return ListView.builder(itemBuilder: itemBuilder)
+    // TODO 2
+    return ListView.builder(
+      itemCount: ingredients.length,
+        itemBuilder: (BuildContext context, int index) {
+          return CheckboxListTile(
+            value: false,
+            // TODO 3
+            title: Text(ingredients[index]),
+            onChanged: (newValue) {},
+          );
+        }
+    );
+    // TODO 4
   }
 }
