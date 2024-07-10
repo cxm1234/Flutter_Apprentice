@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:recipe_finder/colors.dart';
+import 'package:recipe_finder/network/recipe_model.dart';
+import 'package:recipe_finder/ui/recipe_card.dart';
+import 'package:recipe_finder/ui/recipes/recipe_details.dart';
 import 'package:recipe_finder/ui/widgets/custom_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,9 +36,12 @@ class _RecipeListState extends State<RecipeList> {
 
   List<String> previousSearches = <String>[];
 
+  APIRecipeQuery? _currentRecipes1;
+
   @override
   void initState() {
     super.initState();
+    loadRecipes();
     getPreviousSearches();
     searchTextController = TextEditingController(text: '');
     _scrollController
@@ -49,6 +57,13 @@ class _RecipeListState extends State<RecipeList> {
           }
         }
       });
+  }
+
+  Future loadRecipes() async {
+    final jsonString = await rootBundle.loadString('assets/recipes1.json');
+    setState(() {
+      _currentRecipes1 = APIRecipeQuery.fromJSON(jsonDecode(jsonString));
+    });
   }
 
   @override
@@ -170,12 +185,24 @@ class _RecipeListState extends State<RecipeList> {
   }
 
   Widget _buildRecipeLoader(BuildContext context) {
-    if (searchTextController.text.length < 3) {
+    final hits = _currentRecipes1?.hits;
+    if (_currentRecipes1 == null || hits == null) {
       return Container();
     }
+    return Center(
+      child: _buildRecipeCard(context, hits, 0),
+    );
+  }
 
-    return const Center(
-      child: CircularProgressIndicator(),
+  Widget _buildRecipeCard(BuildContext context, List<APIHits> hits, int index) {
+    final recipe = hits[index].recipe;
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return RecipeDetails();
+        }));
+      },
+      child: recipeStringCard(recipe.image, recipe.label),
     );
   }
 
