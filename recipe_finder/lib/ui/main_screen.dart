@@ -8,6 +8,7 @@ import 'package:recipe_finder/colors.dart';
 import 'package:recipe_finder/ui/myrecipes/my_recipes_list.dart';
 import 'package:recipe_finder/ui/recipes/recipe_list.dart';
 import 'package:recipe_finder/ui/shopping/shopping_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,17 +22,35 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   List<Widget> pageList = <Widget>[];
 
+  static const String prefSelectedIndexKey = 'selectedIndex';
+
   @override
   void initState() {
     super.initState();
     pageList.add(const RecipeList());
     pageList.add(const MyRecipesList());
     pageList.add(ShoppingList());
+    getCurrentIndex();
+  }
+
+  void saveCurrentIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(prefSelectedIndexKey, _selectedIndex);
+  }
+
+  void getCurrentIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(prefSelectedIndexKey)) {
+        setState(() {
+          _selectedIndex = prefs.getInt(prefSelectedIndexKey) ?? 0;
+        });
+    }
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      saveCurrentIndex();
     });
   }
 
