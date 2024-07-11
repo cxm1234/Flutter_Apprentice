@@ -1,12 +1,12 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
+import 'package:chopper/chopper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:recipe_finder/colors.dart';
+import 'package:recipe_finder/network/model_response.dart';
 import 'package:recipe_finder/network/recipe_model.dart';
 import 'package:recipe_finder/network/recipe_service.dart';
 import 'package:recipe_finder/ui/recipe_card.dart';
@@ -57,12 +57,6 @@ class _RecipeListState extends State<RecipeList> {
           }
         }
       });
-  }
-
-  Future<APIRecipeQuery> getRecipeData(String query, int from, int to) async {
-    final recipeJson = await RecipeService().getRecipes(query, from, to);
-    final recipeMap = json.decode(recipeJson);
-    return APIRecipeQuery.fromJSON(recipeMap);
   }
 
   @override
@@ -188,8 +182,15 @@ class _RecipeListState extends State<RecipeList> {
       return Container();
     }
 
-    return FutureBuilder<APIRecipeQuery>(
-      future: getRecipeData(searchTextController.text.trim(), currentStartPosition, currentEndPosition),
+    return FutureBuilder<Response<Result<APIRecipeQuery>>>(
+      future: RecipeService.create().queryRecipes(
+          apiId,
+          apiKey,
+          'public',
+          searchTextController.text.trim(),
+          currentStartPosition,
+          currentEndPosition
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
@@ -198,7 +199,12 @@ class _RecipeListState extends State<RecipeList> {
             );
           }
           loading = false;
-          final query = snapshot.data;
+          final result = snapshot.data?.body;
+          if (result == null || result is Error) {
+            inErrorState = true;
+            return _buildRecipeList(context, currentSearchList);
+          }
+          final query = (result as Success).value;
           inErrorState = false;
           currentCount = query?.count ?? 0;
           hasMore = false;
