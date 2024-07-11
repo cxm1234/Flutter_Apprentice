@@ -1,11 +1,14 @@
 import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:recipe_finder/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_finder/network/recipe_model.dart';
+import 'package:recipe_finder/data/models/models.dart';
+import 'package:recipe_finder/data/memory_repository.dart';
 
 class RecipeDetails extends StatelessWidget {
 

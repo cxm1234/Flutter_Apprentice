@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:recipe_finder/data/models/ingredient.dart';
 
 part 'recipe_model.g.dart';
 
@@ -88,3 +89,10 @@ class APIIngredients {
   Map<String, dynamic> toJson() => _$APIIngredientsToJson(this);
 }
 
+List<Ingredient> convertIngredients(List<APIIngredients> apiIngredients) {
+  final ingredients = <Ingredient>[];
+  apiIngredients.forEach((ingredient) {
+    ingredients.add(Ingredient(name: ingredient.name, weight: ingredient.weight));
+  });
+  return ingredients;
+}
