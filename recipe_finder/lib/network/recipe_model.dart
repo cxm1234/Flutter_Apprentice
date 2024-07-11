@@ -10,19 +10,14 @@ class APIRecipeQuery {
 
   Map<String, dynamic> toJson() => _$APIRecipeQueryToJson(this);
 
-  @JsonKey(name: 'q')
-  String query;
   int from;
   int to;
-  bool more;
   int count;
   List<APIHits>? hits;
 
   APIRecipeQuery({
-    required this.query,
     required this.from,
     required this.to,
-    required this.more,
     required this.count,
     required this.hits
 });

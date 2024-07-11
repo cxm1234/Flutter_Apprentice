@@ -26,7 +26,7 @@ class RecipeDetails extends StatelessWidget {
                       alignment: Alignment.topLeft,
                       child: CachedNetworkImage(
                         // TODO 1
-                        imageUrl: 'https://www.edamam.com/web-img/e42/e42f9119813e890af34c259785ae1cfb.jpg',
+                        imageUrl: 'https://www.lottieanddoof.com/wp-content/uploads/2011/07/IMG_9907.jpg',
                         alignment: Alignment.topLeft,
                         fit: BoxFit.fill,
                         width: size.width,
@@ -86,7 +86,7 @@ class RecipeDetails extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     icon: SvgPicture.asset(
-                      'assets/images/icon_boolmark.svg',
+                      'assets/images/icon_bookmark.svg',
                       color: Colors.white,
                     ),
                     label: const Text(

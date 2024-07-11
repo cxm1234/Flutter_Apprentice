@@ -8,10 +8,8 @@ part of 'recipe_model.dart';
 
 APIRecipeQuery _$APIRecipeQueryFromJson(Map<String, dynamic> json) =>
     APIRecipeQuery(
-      query: json['q'] as String,
       from: (json['from'] as num).toInt(),
       to: (json['to'] as num).toInt(),
-      more: json['more'] as bool,
       count: (json['count'] as num).toInt(),
       hits: (json['hits'] as List<dynamic>?)
           ?.map((e) => APIHits.fromJson(e as Map<String, dynamic>))
@@ -20,10 +18,8 @@ APIRecipeQuery _$APIRecipeQueryFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$APIRecipeQueryToJson(APIRecipeQuery instance) =>
     <String, dynamic>{
-      'q': instance.query,
       'from': instance.from,
       'to': instance.to,
-      'more': instance.more,
       'count': instance.count,
       'hits': instance.hits,
     };

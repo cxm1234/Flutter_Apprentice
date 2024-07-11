@@ -5,8 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:recipe_finder/network/recipe_model.dart';
 
-Widget recipeStringCard(String image, String label) {
+Widget recipeCard(APIRecipe recipe) {
   return Card(
     elevation: 4.0,
     shape: RoundedRectangleBorder(
@@ -21,8 +22,7 @@ Widget recipeStringCard(String image, String label) {
               topRight: Radius.circular(6.0)
           ),
           child: CachedNetworkImage(
-            // TODO Replace with image from recipe
-            imageUrl: image,
+            imageUrl: recipe.image,
             height: 210,
             fit: BoxFit.fill,
           ),
@@ -33,8 +33,7 @@ Widget recipeStringCard(String image, String label) {
         Padding(
             padding: const EdgeInsets.only(left: 8.0),
           child: Text(
-            // TODO Replace with label from recipe
-            label,
+            recipe.label,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: const TextStyle(

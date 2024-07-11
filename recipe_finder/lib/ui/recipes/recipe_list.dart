@@ -1,11 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:recipe_finder/colors.dart';
 import 'package:recipe_finder/network/recipe_model.dart';
+import 'package:recipe_finder/network/recipe_service.dart';
 import 'package:recipe_finder/ui/recipe_card.dart';
 import 'package:recipe_finder/ui/recipes/recipe_details.dart';
 import 'package:recipe_finder/ui/widgets/custom_dropdown.dart';
@@ -25,7 +28,7 @@ class _RecipeListState extends State<RecipeList> {
 
   late TextEditingController searchTextController;
   final _scrollController = ScrollController();
-  List currentSearchList = [];
+  List<APIHits> currentSearchList = [];
   int currentCount = 0;
   int currentStartPosition = 0;
   int currentEndPosition = 20;
@@ -36,12 +39,9 @@ class _RecipeListState extends State<RecipeList> {
 
   List<String> previousSearches = <String>[];
 
-  APIRecipeQuery? _currentRecipes1;
-
   @override
   void initState() {
     super.initState();
-    loadRecipes();
     getPreviousSearches();
     searchTextController = TextEditingController(text: '');
     _scrollController
@@ -59,11 +59,10 @@ class _RecipeListState extends State<RecipeList> {
       });
   }
 
-  Future loadRecipes() async {
-    final jsonString = await rootBundle.loadString('assets/recipes1.json');
-    setState(() {
-      _currentRecipes1 = APIRecipeQuery.fromJSON(jsonDecode(jsonString));
-    });
+  Future<APIRecipeQuery> getRecipeData(String query, int from, int to) async {
+    final recipeJson = await RecipeService().getRecipes(query, from, to);
+    final recipeMap = json.decode(recipeJson);
+    return APIRecipeQuery.fromJSON(recipeMap);
   }
 
   @override
@@ -185,12 +184,57 @@ class _RecipeListState extends State<RecipeList> {
   }
 
   Widget _buildRecipeLoader(BuildContext context) {
-    final hits = _currentRecipes1?.hits;
-    if (_currentRecipes1 == null || hits == null) {
+    if (searchTextController.text.length < 3) {
       return Container();
     }
-    return Center(
-      child: _buildRecipeCard(context, hits, 0),
+
+    return FutureBuilder<APIRecipeQuery>(
+      future: getRecipeData(searchTextController.text.trim(), currentStartPosition, currentEndPosition),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString(), textAlign: TextAlign.center, textScaleFactor: 1.3,),
+            );
+          }
+          loading = false;
+          final query = snapshot.data;
+          inErrorState = false;
+          currentCount = query?.count ?? 0;
+          hasMore = false;
+          currentSearchList.addAll(query?.hits ?? []);
+          if ((query?.to ?? 0) < currentEndPosition) {
+            currentEndPosition = query?.to ?? 0;
+          }
+          return _buildRecipeList(context, currentSearchList);
+        } else {
+          if (currentCount == 0) {
+            return const Center(child: CircularProgressIndicator(),);
+          } else {
+            return _buildRecipeList(context, currentSearchList);
+          }
+        }
+      },
+    );
+  }
+
+  Widget _buildRecipeList(BuildContext recipeListContext, List<APIHits> hits) {
+    final size = MediaQuery.of(context).size;
+    const itemHeight = 310;
+    final itemWidth = size.width / 2;
+
+    return Flexible(
+      child: GridView.builder(
+          controller: _scrollController,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: (itemWidth / itemHeight),
+          ),
+          itemCount: hits.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _buildRecipeCard(recipeListContext, hits, index);
+          }
+      ),
     );
   }
 
@@ -202,7 +246,7 @@ class _RecipeListState extends State<RecipeList> {
           return RecipeDetails();
         }));
       },
-      child: recipeStringCard(recipe.image, recipe.label),
+      child: recipeCard(recipe),
     );
   }
 

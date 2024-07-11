@@ -19,7 +19,7 @@ Future getData(Uri url) async {
 
 class RecipeService {
   Future<dynamic> getRecipes(String query, int from, int to) async {
-    final url = Uri.https(baseUrl, searchApi, {'app_id': apiId, 'app_key': apiKey, 'from': from, 'to': to});
+    final url = Uri.https(baseUrl, searchApi, {'app_id': apiId, 'app_key': apiKey, 'type': 'public', 'q': query, 'from': '$from', 'to': '$to'});
     final recipeData = await getData(url);
     return recipeData;
   }
