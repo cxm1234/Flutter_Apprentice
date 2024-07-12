@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:recipe_finder/colors.dart';
+import 'package:recipe_finder/data/models/recipe.dart';
 import 'package:recipe_finder/network/model_response.dart';
 import 'package:recipe_finder/network/recipe_model.dart';
 import 'package:recipe_finder/network/recipe_service.dart';
@@ -249,7 +250,16 @@ class _RecipeListState extends State<RecipeList> {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return RecipeDetails();
+          final detailRecipe = Recipe(
+            label: recipe.label,
+            image: recipe.image,
+            url: recipe.url,
+            calories: recipe.calories,
+            totalTime: recipe.totalTime,
+            totalWeight: recipe.totalWeight
+          );
+          detailRecipe.ingredients = convertIngredients(recipe.ingredients);
+          return RecipeDetails(recipe: detailRecipe);
         }));
       },
       child: recipeCard(recipe),

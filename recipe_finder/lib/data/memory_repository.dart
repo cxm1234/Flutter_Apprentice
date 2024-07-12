@@ -1,9 +1,9 @@
 import 'dart:core';
-import 'package:flutter/foundation.dart';
+import 'dart:async';
 import 'repository.dart';
 import 'models/models.dart';
 
-class MemoryRepository extends Repository with ChangeNotifier {
+class MemoryRepository extends Repository {
 
   @override
   Future init() {
@@ -12,14 +12,34 @@ class MemoryRepository extends Repository with ChangeNotifier {
 
   @override
   void close() {
+    _recipeStreamController.close();
+    _ingredientStreamController.close();
   }
 
   final List<Recipe> _currentRecipes = <Recipe>[];
   final List<Ingredient> _currentIngredients = <Ingredient>[];
 
+  Stream<List<Recipe>>? _recipeStream;
+  Stream<List<Ingredient>>? _ingredientStream;
+
+  final StreamController _recipeStreamController = StreamController<List<Recipe>>();
+  final StreamController _ingredientStreamController = StreamController<List<Ingredient>>();
+
   @override
-  List<Recipe> findAllRecipes() {
-    return _currentRecipes;
+  Stream<List<Recipe>> watchAllRecipes() {
+    _recipeStream ??= _recipeStreamController.stream as Stream<List<Recipe>>;
+    return _recipeStream!;
+  }
+
+  @override
+  Stream<List<Ingredient>> watchAllIngredients() {
+    _ingredientStream ??= _ingredientStreamController.stream as Stream<List<Ingredient>>;
+    return _ingredientStream!;
+  }
+
+  @override
+  Future<List<Recipe>> findAllRecipes() {
+    return Future.value(_currentRecipes);
   }
 
   @override
@@ -40,18 +60,17 @@ class MemoryRepository extends Repository with ChangeNotifier {
   }
 
   @override
-  int insertRecipe(Recipe recipe) {
+  Future<int> insertRecipe(Recipe recipe) {
     _currentRecipes.add(recipe);
+    _recipeStreamController.sink.add(_currentRecipes);
     insertIngredients(recipe.ingredients);
-    notifyListeners();
-    return 0;
+    return Future.value(0);
   }
 
   @override
-  List<int> insertIngredients(List<Ingredient> ingredients) {
+  Future<List<int>> insertIngredients(List<Ingredient> ingredients) {
     if (ingredients.isNotEmpty) {
       _currentIngredients.addAll(ingredients);
-      notifyListeners();
     }
     return <int>[];
   }
@@ -59,7 +78,10 @@ class MemoryRepository extends Repository with ChangeNotifier {
   @override
   void deleteRecipe(Recipe recipe) {
     _currentRecipes.remove(recipe);
-    deleteRecipeIngredients(recipe.id);
+    final id = recipe.id;
+    if (id != null) {
+      deleteRecipeIngredients(id);
+    }
     notifyListeners();
   }
 
