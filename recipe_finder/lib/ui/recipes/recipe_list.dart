@@ -5,11 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:recipe_finder/colors.dart';
 import 'package:recipe_finder/data/models/recipe.dart';
 import 'package:recipe_finder/network/model_response.dart';
 import 'package:recipe_finder/network/recipe_model.dart';
 import 'package:recipe_finder/network/recipe_service.dart';
+import 'package:recipe_finder/network/service_interface.dart';
 import 'package:recipe_finder/ui/recipe_card.dart';
 import 'package:recipe_finder/ui/recipes/recipe_details.dart';
 import 'package:recipe_finder/ui/widgets/custom_dropdown.dart';
@@ -184,7 +186,7 @@ class _RecipeListState extends State<RecipeList> {
     }
 
     return FutureBuilder<Response<Result<APIRecipeQuery>>>(
-      future: RecipeService.create().queryRecipes(
+      future: Provider.of<ServiceInterface>(context).queryRecipes(
           apiId,
           apiKey,
           'public',
